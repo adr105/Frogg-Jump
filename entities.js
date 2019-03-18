@@ -1,12 +1,12 @@
-var sprites = {
- ship: { sx: 0, sy: 0, w: 38, h: 43, frames: 3 },
- missile: { sx: 0, sy: 42, w: 7, h: 20, frames: 1 },
- enemy_purple: { sx: 37, sy: 0, w: 42, h: 43, frames: 1 },
- enemy_bee: { sx: 79, sy: 0, w: 37, h: 43, frames: 1 },
- enemy_ship: { sx: 116, sy: 0, w: 42, h: 43, frames: 1 },
- enemy_circle: { sx: 158, sy: 0, w: 32, h: 33, frames: 1 },
- explosion: { sx: 0, sy: 64, w: 64, h: 64, frames: 12 },
 
+var sprites = {
+  car1: {sx:8, sy:4, w:96, h:48, frames: 1},
+  car2: {sx:109, sy:4, w:96, h:48, frames: 1},
+  car3: {sx:213, sy:4, w:96, h:48, frames: 1},
+  truck1: {sx:7, sy:62, w:125, h:48, frames: 1},
+  truck2: {sx:148, sy:62, w:200, h:48, frames: 1},
+  bg: {sx:421, sy:0, w:550, h:625, frames: 1},
+  frog: {sx:0, sy:346, w:36, h:24, frames: 1},
 };
 
 var OBJECT_PLAYER = 1,
@@ -14,6 +14,7 @@ var OBJECT_PLAYER = 1,
     OBJECT_ENEMY = 4,
     OBJECT_ENEMY_PROJECTILE = 8,
     OBJECT_POWERUP = 16;
+
 
 
 /// CLASE PADRE SPRITE
@@ -43,6 +44,58 @@ Sprite.prototype.hit = function(damage) {
   this.board.remove(this);
 }
 
+//ESCENARIO 
+var PlayerField = function(){
+  this.setup('bg', {x:0, y:0});
+  this.w = Game.width;
+  this.h = Game.height;
+
+  this.step = function(dt) {
+  };
+};
+PlayerField.prototype = new Sprite();
+
+//RANA
+var Frog = function(){
+  this.setup('frog', {vx: 0, vy: 0, reloadTime: 0.12});
+
+   this.x = Game.width/2 - this.w / 2;
+   this.y = Game.height - this.h;
+   this.reload = 0;
+
+   this.step = function(dt){
+     this.reload+=dt;
+
+      //MOVIMIENTOS
+      if(Game.keys['left']) { this.vx = -this.w; }
+       else if(Game.keys['right']) { this.vx = this.w; }
+       else if(Game.keys['up']) { this.vy = -this.h; }
+       else if(Game.keys['down']) { this.vy = this.h; }
+
+    
+        if (this.reload > this.reloadTime){
+          this.reload = 0;
+          this.x+=this.vx;
+          this.y+=this.vy;
+        }
+        
+
+      //LIMITES
+     if(this.x < 0) { this.x = 0; }
+        else if(this.x > Game.width-this.w/2)
+          this.x = Game.width-this.w/2;
+
+     if(this.y < 0) { this.y = 0; }
+        else if (this.y > Game.height - this.h)
+          this.y = Game.height - this.h;
+
+      this.vx= 0;
+      this.vy= 0;
+   }
+
+}
+Frog.prototype = new Sprite();
+Frog.prototype.type = OBJECT_PLAYER;
 
 
 // PLAYER

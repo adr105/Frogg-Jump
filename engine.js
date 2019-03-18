@@ -24,7 +24,7 @@ var Game = new function() {
 
 
   // le asignamos un nombre lógico a cada tecla que nos interesa
-  var KEY_CODES = { 37:'left', 39:'right', 32 :'fire' };
+  var KEY_CODES = { 37:'left', 39:'right', 38:'up', 40:'down', 32 :'fire' };
 
   this.keys = {};
 
@@ -131,10 +131,6 @@ var analytics = new function(){
 
 
 
-
-
-
-
 ///////// SPRITESHEET
 
 var SpriteSheet = new function() {
@@ -143,8 +139,9 @@ var SpriteSheet = new function() {
     this.map = spriteData;
     this.image = new Image();
     this.image.onload = callback;
-    this.image.src = 'images/sprites.png';
+    this.image.src = 'images/spritesF.png';
   };
+
   this.draw = function(ctx,sprite,x,y,frame) {
     var s = this.map[sprite];
     if(!frame) frame = 0;

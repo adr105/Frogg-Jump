@@ -8,19 +8,29 @@ var startGame = function() {
                                   playGame));
 }
 
-
-
 var playGame = function() {
 
+  var board = new GameBoard();
+  //añado campo
+  board.add(new PlayerField(), 1);
+  Game.setBoard(0, board);
+
+  //añado rana
+  var fboard = new GameBoard();
+  fboard.add(new Frog());
+  Game.setBoard(1, fboard);
+
+  //Game.setBoard(1,new TitleScreen("Frog","Press 'up' to start", playGame));
+  /*
   Game.setBoard(0,new Starfield(20,0.4,100,true))
   Game.setBoard(1,new Starfield(50,0.6,100))
   Game.setBoard(2,new Starfield(100,1.0,50));
 
-  var board = new GameBoard();
-  board.add(new PlayerShip());
   board.add(new Level(level1,winGame));
   Game.setBoard(3,board);
+  */
 }
+
 
 var winGame = function() {
   Game.setBoard(3,new TitleScreen("You win!", 
@@ -42,5 +52,5 @@ var loseGame = function() {
 // y este después de realizar la inicialización llamará a
 // startGame
 window.addEventListener("load", function() {
-  Game.initialize("game",sprites,startGame);
+  Game.initialize("game",sprites,playGame);
 });
