@@ -5,12 +5,13 @@ var sprites = {
   car3: {sx:213, sy:4, w:96, h:48, frames: 1},
   car4: {sx:7, sy:62, w:125, h:48, frames: 1},
   car5: {sx:148, sy:62, w:200, h:48, frames: 1},
-  bg: {sx:421, sy:0, w:550, h:625, frames: 1},
+  bg: {sx:421, sy:0, w:550, h:624, frames: 1},
   frog: {sx:0, sy:346, w:36, h:24, frames: 1},
   trunk1: {sx:9, sy:123, w:191, h:42, frames: 1},
   trunk2: {sx:9, sy:172, w:247, h:42, frames: 1},
   trunk3: {sx:270, sy:172, w:130, h:42, frames: 1},
-  tortu: {sx:5, sy:288, w:49, h:48, frames: 1},
+  tortu: {sx:5, sy:288, w:48, h:48, frames: 1},
+  death: {sx:211, sy:128, w:48, h:36, frames: 4},
 };
 
 var OBJECT_PLAYER = 1,
@@ -59,6 +60,14 @@ var PlayerField = function(){
   this.step = function(dt) {
   };
 };
+
+
+var loseGame = function() {
+  var board = new TitleScreen("You lose!", "Press space bar to play again",playGame);
+  Game.setBoard(3, board, true);
+};
+
+
 PlayerField.prototype = new Sprite();
 
 //RANA
@@ -68,6 +77,7 @@ var Frog = function(){
    this.x = Game.width/2 - this.w / 2;
    this.y = Game.height - this.h;
    this.reload = 0;
+   this.overTrunk = false;
 
    this.step = function(dt){
      this.reload+=dt;
@@ -95,19 +105,51 @@ var Frog = function(){
         else if (this.y > Game.height - this.h)
           this.y = Game.height - this.h;
 
+      //resets 
       this.vx= 0;
       this.vy= 0;
+      this.overTrunk = false; //a partir del 2do tronco
    }
    
+
     this.onTrunk = function(vt){
       this.x += vt;
-    };
-   
-     
+      this.overTrunk = true;
+    }
+
+    this.onWater = function(damage){
+      if(!this.overTrunk){this.hit(damage);}  
+    }
+
+    this.hit = function(damage) {
+      if(this.board.remove(this)){
+        var deathFrog = new Death(this.x, this.y);
+        this.board.add(deathFrog);
+        loseGame();
+      }
+    }
    
 }
 Frog.prototype = new Sprite();
 Frog.prototype.type = OBJECT_PLAYER;
+
+
+
+//Muerte
+
+var Death = function(x,y){
+  this.setup('death', { frame: 0 });
+  this.x = x;
+  this.y = y;
+  this.step = function(dt){
+    this.frame++;
+    if(this.frame >= 4) {
+      this.board.remove(this);
+    }
+  }
+
+}
+Death.prototype = new Sprite();
 
 
 //CAR
@@ -188,31 +230,21 @@ Trunk.prototype = new Sprite();
 Trunk.prototype.type = OBJECT_ENEMY;
 
 //TORTUGA
-var Tortu = function(dir, row, vt){
-  this.setup('tortu', {dir: dir, row: row, vt: vt});
+var Tortu = function(row, vt){
+  this.setup('tortu', {row: row, vt: vt});
   
-  //this.type hacer con esto que elija el sprite LEFT o RIGHT 
-  
-  if(this.dir == RIGHT){this.x = Game.width;}
-  else {this.x = -this.w} 
+  this.x = -this.w
 
   //48 altura max 
   this.y = (Game.height - this.h) - row * 48;
 
   this.step = function(dt){
     //MOVIMIENTO
-    if(this.dir == RIGHT){this.x -= this.vt;}
-    else{ this.x += this.vt;}
+    this.x += this.vt;
 
     //COLISION
     var collision = this.board.collide(this,OBJECT_PLAYER);
-    if(collision) {
-		if(this.dir == RIGHT){
-			collision.onTrunk(-this.vt);
-		}
-		else {collision.onTrunk(this.vt);}
-		
-    }
+    if(collision) {collision.onTrunk(this.vt);}
 
     //LIMITE
     if((this.x + this.w) < 0) { 
@@ -227,6 +259,39 @@ var Tortu = function(dir, row, vt){
 }
 Tortu.prototype = new Sprite();
 Tortu.prototype.type = OBJECT_ENEMY;
+
+
+
+//WATER
+var Water = function(){
+  
+  this.x = 0;
+  this.y = 48;
+  this.w = Game.width;
+  this.h = (Game.height-48)/2-48;
+  
+
+  this.step = function(dt){
+    //COLISION      
+    var collision = this.board.collide(this,OBJECT_PLAYER);
+    if(collision){
+      collision.onWater(this.damage);
+    }
+  }
+
+  //Invisible
+  this.draw = function(ctx){};
+
+  //AZUL PARA COMPROBAR TAMAÑO
+  /*this.draw = function(ctx){
+    ctx.fillStyle = "blue";
+    ctx.fillRect(this.x,this.y,this.w,this.h);
+  };*/
+  
+}
+Water.prototype = new Sprite();
+Water.prototype.type = OBJECT_ENEMY;
+
 
 // PLAYER
 

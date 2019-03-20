@@ -26,10 +26,11 @@ var playGame = function() {
   fboard.add(new Trunk('trunk1', RIGHT, 11, 0.8));
   fboard.add(new Trunk('trunk2', RIGHT, 9, 0.7));
   fboard.add(new Trunk('trunk3', LEFT, 7, 0.8));
-  fboard.add(new Tortu(LEFT, 10, 0.5));
-  fboard.add(new Tortu(RIGHT, 8, 0.5));
+  fboard.add(new Tortu(10, 0.5));
+  fboard.add(new Tortu(8, 0.8));
 
   //añadir rana después del tronco para que no se oculte
+  fboard.add(new Water());
   fboard.add(new Frog());  
   Game.setBoard(1, fboard);
 
