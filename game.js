@@ -15,9 +15,22 @@ var playGame = function() {
   board.add(new PlayerField(), 1);
   Game.setBoard(0, board);
 
-  //añado rana
+
+  //añado rana y coches
   var fboard = new GameBoard();
-  fboard.add(new Frog());
+
+  
+  fboard.add(new Car('car1', LEFT, 2, 0.5));
+  fboard.add(new Car('car2', LEFT, 3, 0.8));
+  fboard.add(new Car('car3', RIGHT, 4, 0.5));
+  fboard.add(new Trunk('trunk1', RIGHT, 11, 0.8));
+  fboard.add(new Trunk('trunk2', RIGHT, 9, 0.7));
+  fboard.add(new Trunk('trunk3', LEFT, 7, 0.8));
+  fboard.add(new Tortu(LEFT, 10, 0.5));
+  fboard.add(new Tortu(RIGHT, 8, 0.5));
+
+  //añadir rana después del tronco para que no se oculte
+  fboard.add(new Frog());  
   Game.setBoard(1, fboard);
 
   //Game.setBoard(1,new TitleScreen("Frog","Press 'up' to start", playGame));
