@@ -24,7 +24,7 @@ var playGame = function() {
   fboard.add(new Car('car1', LEFT, 2, 0.5));
   fboard.add(new Car('car2', LEFT, 3, 0.8));
   fboard.add(new Car('car3', RIGHT, 4, 0.5));
-  fboard.add(new Trunk('trunk1', RIGHT, 11, 0.8));
+  fboard.add(new Trunk('trunk1', RIGHT, 11, 0.6));
   fboard.add(new Trunk('trunk2', RIGHT, 9, 0.7));
   fboard.add(new Trunk('trunk3', LEFT, 7, 0.8));
   fboard.add(new Tortu(10, 0.5));
@@ -32,25 +32,17 @@ var playGame = function() {
 
   //añadir rana después del tronco para que no se oculte
   fboard.add(new Water());
+  fboard.add(new Home());
   fboard.add(new Frog());  
   Game.setBoard(1, fboard, true);
 
-  //Game.setBoard(1,new TitleScreen("Frog","Press 'up' to start", playGame));
-  /*
-  Game.setBoard(0,new Starfield(20,0.4,100,true))
-  Game.setBoard(1,new Starfield(50,0.6,100))
-  Game.setBoard(2,new Starfield(100,1.0,50));
-
-  board.add(new Level(level1,winGame));
-  Game.setBoard(3,board);
-  */
 }
 
 
 var winGame = function() {
   Game.setBoard(1,new TitleScreen("You win!", 
-                                  "Press fire to play again",
-                                  playGame));
+                                  "Press Space to play again",
+                                  playGame), true);
 };
 
 

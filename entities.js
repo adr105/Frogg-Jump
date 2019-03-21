@@ -303,6 +303,28 @@ Water.prototype = new Sprite();
 Water.prototype.type = OBJECT_ENEMY;
 
 
+//WIN
+var Home = function(){
+  
+  this.x = 0;
+  this.y = 0;
+  this.w = Game.width;
+  this.h = 48;
+  
 
+  this.step = function(dt){
+    //goal      
+    var collision = this.board.collide(this,OBJECT_PLAYER);
+    if(collision){
+      setTimeout(winGame, 900); 
+    }
+  }
+
+  //Invisible
+  this.draw = function(ctx){};
+  
+}
+Home.prototype = new Sprite();
+Home.prototype.type = OBJECT_ENEMY;
 
 
