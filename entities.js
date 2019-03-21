@@ -69,8 +69,6 @@ PlayerField.prototype = new Sprite();
 var Welcome = function() {
   this.setup('title',{x:140, y:200});
 
-  //this.w = Game.width/2 - this.w/3;
-  //this.h = Game.height/2 - this.h + 40;
   this.step = function(dt) {
   };
 };
@@ -123,7 +121,7 @@ var Frog = function(){
    
 
     this.onTrunk = function(vt){
-      this.x += vt;
+      this.vx += vt*2;
       this.overTrunk = true;
     }
 
@@ -134,7 +132,7 @@ var Frog = function(){
     this.hit = function(damage) {
       if(this.board.remove(this)){
         var deathFrog = new Death(this.x, this.y);
-        this.board.add(deathFrog);
+        this.board.addPrio(deathFrog);
         loseGame();
       }
     }
@@ -192,7 +190,18 @@ var Car = function(type, dir, row, speed){
       this.board.remove(this);
     }
 
+  }
 
+  this.reset = function(){
+    if(this.dir == RIGHT){this.x = Game.width;}
+    else{this.x = -this.w;}
+  }
+  this.setter = function(x, y){
+    this.x = x;
+    this.y = y;
+  }
+  this.getter = function(){
+    return [this.x, this.y];
   }
 
 
@@ -235,6 +244,18 @@ var Trunk = function(type, dir, row, vt){
 
   }
 
+  this.reset = function(){
+    if(this.dir == RIGHT){this.x = Game.width;}
+    else{this.x = -this.w;}
+  }
+  this.setter = function(x, y){
+    this.x = x;
+    this.y = y;
+  }
+  this.getter = function(){
+    return [this.x, this.y];
+  }
+
 }
 Trunk.prototype = new Sprite();
 Trunk.prototype.type = OBJECT_ENEMY;
@@ -263,7 +284,18 @@ var Tortu = function(row, vt){
       this.board.remove(this);
     }
 
+  }
 
+  this.reset = function(){
+    if(this.dir == RIGHT){this.x = Game.width;}
+    else{this.x = -this.w;}
+  }
+  this.setter = function(x, y){
+    this.x = x;
+    this.y = y;
+  }
+  this.getter = function(){
+    return [this.x, this.y];
   }
 
 }
@@ -328,3 +360,49 @@ Home.prototype = new Sprite();
 Home.prototype.type = OBJECT_ENEMY;
 
 
+//SPAWNER
+
+var Spawner = function(board, obj, type, freq, dir, row, speed){
+
+  this.setup({board: board, obj : obj, type : type, freq : freq, dir : dir, row : row, speed : speed});
+
+  this.t = 0;
+  this.initspawn = 2;
+
+  this.generateSpawn = function(){
+    for(i = 0; i < this.initspawn; i++){
+
+      if(this.obj == 'CAR'){
+        this.firstObjet = new Car(this.type, this.dir, this.row, this.speed);
+      } 
+      else if(this.obj == 'TRU'){
+        this.firstObjet = new Trunk(this.type, this.dir, this.row, this.speed);
+      }
+      else{
+        this.firstObjet = new Tortu(this.row, this.speed);
+      }
+      position = this.firstObjet.getter();
+      this.firstObjet.setter(position[0] + this.speed * i, position[1]);
+      this.board.addPrio(this.firstObjet);
+    }
+  }
+
+  this.generateSpawn();
+
+  this.step = function(dt){
+   this.t += dt;
+   if(this.t >= this.freq){
+    this.genObject();
+    this.t = 0;
+   }
+  };
+
+  this.genObject = function(){
+    var objeto = Object.create(this.firstObjet);
+    objeto.reset();
+    this.board.addPrio(objeto);
+  };
+};
+Spawner.prototype = new Sprite();
+Spawner.prototype.draw = function() {};
+Spawner.prototype.setup = function(props) {this.merge(props);};

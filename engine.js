@@ -203,6 +203,28 @@ var GameBoard = function() {
     return obj; 
   };
 
+  this.addPrio = function(obj){
+    obj.board=this;
+   
+    var prio = true;
+
+    for (var i = this.objects.length - 1; i >= 0; i--) {
+      
+      if(prio){
+        this.objects.push(obj);
+        prio = false;
+      }
+      //ponemos a la cola el resto de objects
+      this.objects[i+1] = this.objects[i];
+    }
+    
+    this.objects[0] = obj;
+    this.cnt[obj.type] = (this.cnt[obj.type] || 0) + 1;
+    return obj; 
+  };
+
+
+
   // Reset the list of removed objects
   this.resetRemoved = function() { this.removed = []; };
 
