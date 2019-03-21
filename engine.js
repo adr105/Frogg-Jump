@@ -69,7 +69,7 @@ var Game = new function() {
 
       // y actualizamos y dibujamos todas las entidades
       for(var i=0,len = boards.length;i<len;i++) {
-        if(boards[i]) { 
+        if(boards[i] && boards[i].active) { 
           boards[i].step(dt);
           boards[i].draw(Game.ctx);
         }
@@ -89,7 +89,10 @@ var Game = new function() {
 
   
   // Change an active game board
-  this.setBoard = function(num,board) { boards[num] = board; };
+  this.setBoard = function(num,board,active) { 
+    boards[num] = board;
+    boards[num].active = active;
+   };
 };
 
 
@@ -168,7 +171,7 @@ var TitleScreen = function TitleScreen(title,subtitle,callback) {
   };
 
   this.draw = function(ctx) {
-    ctx.fillStyle = "#FFFFFF";
+    ctx.fillStyle = "#A5DF00";
     ctx.textAlign = "center";
 
     ctx.font = "bold 40px bangers";

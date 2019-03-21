@@ -3,9 +3,10 @@
 
 // Especifica lo que se debe pintar al cargar el juego
 var startGame = function() {
-  Game.setBoard(0,new TitleScreen("Alien Invasion", 
-                                  "Press fire to start playing",
-                                  playGame));
+  Game.setBoard(0,new Welcome(), true);
+  Game.setBoard(1,new TitleScreen("", 
+                                  "Press SPACE to start playing",
+                                  playGame), true);
 }
 
 var playGame = function() {
@@ -13,7 +14,7 @@ var playGame = function() {
   var board = new GameBoard();
   //añado campo
   board.add(new PlayerField(), 1);
-  Game.setBoard(0, board);
+  Game.setBoard(0, board, true);
 
 
   //añado rana y coches
@@ -32,7 +33,7 @@ var playGame = function() {
   //añadir rana después del tronco para que no se oculte
   fboard.add(new Water());
   fboard.add(new Frog());  
-  Game.setBoard(1, fboard);
+  Game.setBoard(1, fboard, true);
 
   //Game.setBoard(1,new TitleScreen("Frog","Press 'up' to start", playGame));
   /*
@@ -47,7 +48,7 @@ var playGame = function() {
 
 
 var winGame = function() {
-  Game.setBoard(3,new TitleScreen("You win!", 
+  Game.setBoard(1,new TitleScreen("You win!", 
                                   "Press fire to play again",
                                   playGame));
 };
@@ -55,10 +56,9 @@ var winGame = function() {
 
 
 var loseGame = function() {
-  Game.setBoard(3,new TitleScreen("You lose!", 
-                                  "Press fire to play again",
-                                  playGame));
+  Game.setBoard(1, new TitleScreen("You lose!", "Press space bar to play again",playGame), true);
 };
+
 
 
 // Indica que se llame al método de inicialización una vez
@@ -66,5 +66,5 @@ var loseGame = function() {
 // y este después de realizar la inicialización llamará a
 // startGame
 window.addEventListener("load", function() {
-  Game.initialize("game",sprites,playGame);
+  Game.initialize("game",sprites,startGame);
 });
