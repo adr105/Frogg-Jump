@@ -239,6 +239,18 @@ var GameBoard = function() {
     }
   };
 
+  this.removeClean = function(obj){
+    var idx = this.removed.indexOf(obj);
+    if(idx !== -1){
+      this.removed.pop(obj);
+    }
+    for (var i = this.objects.length - 1; i >= 0; i--) {
+        if(this.objects[i] !== obj)
+          this.removed.push(this.objects[i]);
+    }
+  }
+
+
   // Removed an objects marked for removal from the list
   this.finalizeRemoved = function() {
     for(var i=0,len=this.removed.length;i<len;i++) {

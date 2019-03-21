@@ -133,6 +133,7 @@ var Frog = function(){
       if(this.board.remove(this)){
         var deathFrog = new Death(this.x, this.y);
         this.board.addPrio(deathFrog);
+        this.board.removeClean(deathFrog);
         loseGame();
       }
     }
@@ -348,6 +349,7 @@ var Home = function(){
     //goal      
     var collision = this.board.collide(this,OBJECT_PLAYER);
     if(collision){
+      this.board.removeClean(collision);
       setTimeout(winGame, 900); 
     }
   }
